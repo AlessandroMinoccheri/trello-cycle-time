@@ -1,0 +1,39 @@
+{
+  "name": "alessandrominoccheri/trello-cycle-time",
+  "type": "project",
+  "description": "A library to get cycle time of trello cards",
+  "keywords": [
+    "php",
+    "component",
+    "card",
+    "trello",
+    "cycle",
+    "time"
+  ],
+  "homepage": "https://github.com/AlessandroMinoccheri/trello-cycle-time",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alessandro Minoccheri",
+      "email": "alessandro.minoccheri@gmail.com",
+      "homepage": "https://alessandrominoccheri.github.io/",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.1.0",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "TrelloCycleTime\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }}
