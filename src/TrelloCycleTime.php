@@ -46,15 +46,10 @@ class TrelloCycleTime
 
             $creationCard = $this->repository->findCreationCard($card['id']);
 
-            if ([] !== $creationCard) {
-                $creationCards = array_merge($creationCards, $creationCard);
-            }
+            $creationCards = array_merge($creationCards, $creationCard);
 
             $historyCard = $this->repository->findAllCardHistory($card['id']);
-
-            if ([] !== $historyCard) {
-                $historyCards = array_merge($historyCards, $historyCard);
-            }
+            $historyCards = array_merge($historyCards, $historyCard);
         }
 
         $historyCardsCollection = HistoryCards::createFromArray($historyCards);
@@ -62,7 +57,16 @@ class TrelloCycleTime
 
         $timeCards = new TimeCards($historyCardsCollection);
 
-        return $timeCards->getCardTimeData();
+        $cycleTimeCalculator = new CycleTimeCalculator($timeCards->getCardTimeData(), $historyCardsCollection);
+
+        $cardHistoryCollection = $historyCardsCollection->getCardHistories();
+        foreach ($cardHistoryCollection as $cardHistory) {
+            $cycleTimeCalculator->execute($cardHistory);
+        }
+
+        var_dump($cycleTimeCalculator->getTimeCards());
+
+        return $cycleTimeCalculator->getTimeCards();
     }
 
     public function setClient(Client $client)

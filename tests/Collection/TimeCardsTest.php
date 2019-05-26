@@ -8,66 +8,47 @@ use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
 use TrelloCycleTime\ValueObject\CycleTime;
+use TrelloCycleTime\ValueObject\HistoryCard;
 
 class TimeCardsTest extends TestCase
 {
+    public function testCreateCollectionWithNoData()
+    {
+        $historyCards = $this->prophesize(HistoryCards::class);
+        $historyCards->getCardHistories()->willReturn([]);
+
+        $timeCards = new TimeCards($historyCards->reveal());
+
+        $this->assertEquals([], $timeCards->getCardTimeData());
+    }
+
     public function testCreateCollection()
     {
-        $cardId = '1000';
-        $name = 'name';
-        $listBefore = '';
-        $listAfter = 'ToDo';
-        $date = '2019-04-29 00:00:00';
-        $name2 = 'name2';
-        $listBefore2 = 'ToDo';
-        $listAfter2 = 'Doing';
-        $date2 = '2019-05-05 10:00:00';
+        $id = 1;
+        $title = 'cardTitle';
+        $from = 'from';
+        $to = 'to';
 
-        $data = [
-            [
-                'data' => [
-                    'card' => [
-                        'id' => $cardId,
-                        'name' => $name,
-                    ],
-                    'listBefore' => [
-                        'name' => $listBefore,
-                    ],
-                    'listAfter' => [
-                        'name' => $listAfter,
-                    ]
-                ],
-                'date' => $date
-            ],
-            [
-                'data' => [
-                    'card' => [
-                        'id' => $cardId,
-                        'name' => $name2,
-                    ],
-                    'listBefore' => [
-                        'name' => $listBefore2,
-                    ],
-                    'listAfter' => [
-                        'name' => $listAfter2,
-                    ]
-                ],
-                'date' => $date2
-            ]
+        $historyCard = $this->prophesize(HistoryCard::class);
+        $historyCard->getId()->willReturn($id);
+        $historyCard->getTitle()->willReturn($title);
+        $historyCard->getFrom()->willReturn($from);
+        $historyCard->getTo()->willReturn($to);
+
+        $historyCards = $this->prophesize(HistoryCards::class);
+        $historyCards->getCardHistories()->willReturn([$historyCard->reveal()]);
+
+        $timeCardsCollection = new TimeCards($historyCards->reveal());
+        $timeCards = $timeCardsCollection->getCardTimeData();
+
+        $this->assertCount(1, $timeCards);
+
+        $expectedCycleTime = ['from_to' =>
+            CycleTime::createFromCardHistory($historyCard->reveal())
         ];
 
-        $cardHistoryCollectionData = HistoryCards::createFromArray($data);
-
-        $expected = [
-            'ToDo_Doing' => 6
-        ];
-
-        $cycleTime = CycleTime::createFromCardHistory();
-
-        $cardTimeCollection = new TimeCards($cardHistoryCollectionData);
-        $cardTimes = $cardTimeCollection->getCardTimeData();
-
-        $this->assertCount(1, $cardTimes);
-        $this->assertEquals($expected, $cardTimes[0]->getCycleTimes());
+        $this->assertEquals($id, $timeCards[0]->getId());
+        $this->assertEquals($title, $timeCards[0]->getTitle());
+        $this->assertEquals($expectedCycleTime, $timeCards[0]->getCycleTimes());
     }
 }

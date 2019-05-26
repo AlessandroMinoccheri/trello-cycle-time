@@ -27,7 +27,9 @@ class CycleTimeCalculator
     public function execute(HistoryCard $cardHistory)
     {
         foreach ($this->timeCards as $timeCard) {
-            if ($timeCard->getId() !== $cardHistory->getId()) {
+            if ($timeCard->getId() !== $cardHistory->getId() ||
+                $cardHistory->getFrom() === null ||
+                $cardHistory->getTo() === null) {
                 continue;
             }
 
@@ -47,7 +49,7 @@ class CycleTimeCalculator
         }
     }
 
-    public function getTimeCards() :array
+    public function getTimeCards(): array
     {
         return $this->timeCards;
     }

@@ -15,6 +15,7 @@ class TimeCardTest extends TestCase
     private $title;
     private $from;
     private $to;
+    private $cardHistory;
 
     public function setup()
     {
@@ -24,12 +25,12 @@ class TimeCardTest extends TestCase
         $this->from = 'from';
         $this->to = 'to';
 
-        $cardHistory = $this->prophesize(HistoryCard::class);
-        $cardHistory->getFrom()->willReturn('from');
-        $cardHistory->getTo()->willReturn('to');
+        $this->cardHistory = $this->prophesize(HistoryCard::class);
+        $this->cardHistory->getFrom()->willReturn('from');
+        $this->cardHistory->getTo()->willReturn('to');
 
         $cycleTimeColumnKey = [
-            CycleTime::createFromCardHistory($cardHistory->reveal())
+            CycleTime::createFromCardHistory($this->cardHistory->reveal())
         ];
 
         $this->cardTime = TimeCard::create($this->id, $this->title, $cycleTimeColumnKey);
@@ -37,9 +38,10 @@ class TimeCardTest extends TestCase
 
     public function testCreateCardTime()
     {
+        $expectedCycleTime = CycleTime::createFromCardHistory($this->cardHistory->reveal());
         $this->assertEquals($this->id, $this->cardTime->getId());
         $this->assertEquals($this->title, $this->cardTime->getTitle());
-        $this->assertEquals([], $this->cardTime->getCycleTimes());
+        $this->assertEquals([$expectedCycleTime], $this->cardTime->getCycleTimes());
     }
 
     public function testSetCycleTimeColumnsByKey()
