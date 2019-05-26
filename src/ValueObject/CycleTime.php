@@ -23,21 +23,27 @@ class CycleTime
      * @var string
      */
     private $value;
+    /**
+     * @var string
+     */
+    private $name;
 
-    private function __construct(string $from, string $to, ?string $value)
+    private function __construct(string $from, string $to, ?string $value, string $name)
     {
         $this->from = $from;
         $this->to = $to;
         $this->value = $value;
+        $this->name = $name;
     }
 
     public static function createFromCardHistory(HistoryCard $cardHistory): CycleTime
     {
         $from = $cardHistory->getFrom();
         $to = $cardHistory->getTo();
+        $name = $from . '_' . $to;
         $value = null;
 
-        return new self($from, $to, $value);
+        return new self($from, $to, $value, $name);
     }
 
     /**
@@ -67,5 +73,13 @@ class CycleTime
     public function setValue(string $value)
     {
         return $this->value = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

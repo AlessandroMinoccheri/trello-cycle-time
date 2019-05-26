@@ -62,6 +62,8 @@ class TimeCardsTest extends TestCase
             'ToDo_Doing' => 6
         ];
 
+        $cycleTime = CycleTime::createFromCardHistory();
+
         $cardTimeCollection = new TimeCards($cardHistoryCollectionData);
         $cardTimes = $cardTimeCollection->getCardTimeData();
 

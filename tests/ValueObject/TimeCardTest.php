@@ -44,9 +44,9 @@ class TimeCardTest extends TestCase
 
     public function testSetCycleTimeColumnsByKey()
     {
-        $this->cardTime->setCycleTimesByFromAndTo('fromKey', 'toKey', 'value');
+        $this->cardTime->setCycleTimesByFromAndTo('from', 'to', 'value');
 
-        $cycleTime = $this->cardTime->getCycleTimesByFromAndTo('fromKey', 'toKey');
+        $cycleTime = $this->cardTime->getCycleTimesByFromAndTo('from', 'to');
         $this->assertEquals('value', $cycleTime);
     }
 }

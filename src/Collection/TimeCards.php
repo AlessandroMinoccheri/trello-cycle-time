@@ -3,27 +3,27 @@
 namespace TrelloCycleTime\Collection;
 
 
-use TrelloCycleTime\Column;
+use TrelloCycleTime\CycleTimeCalculator;
 use TrelloCycleTime\ValueObject\HistoryCard;
 use TrelloCycleTime\ValueObject\TimeCard;
 
 class TimeCards
 {
-    public $cardTime;
-    private $toColumns;
-    private $cycleTimeColumns;
+    private $timeCards;
+    private $cycleTimeCollection;
     private $historyCards;
+    private $cycleTimeCalculator;
 
     public function __construct(HistoryCards $historyCards)
     {
+        $this->timeCards = [];
+
         $this->historyCards = $historyCards;
-        $column = new Column();
+        $column = new CycleTimesCollection();
 
         $cardHistoryCollection = $historyCards->getCardHistories();
 
-        $this->toColumns = $column->getAllToColumns($cardHistoryCollection);
-        $this->cycleTimeColumns = $column->getAllCycleTimeColumns($cardHistoryCollection);
-        $this->cardTime = [];
+        $this->cycleTimeCollection = $column->get($cardHistoryCollection);
 
         foreach ($cardHistoryCollection as $cardHistory) {
             $this->createTimeCardIfNotExists($cardHistory);
@@ -31,57 +31,39 @@ class TimeCards
             if ($cardHistory->getFrom() === null || $cardHistory->getTo() === null) {
                 continue;
             }
-
-            $this->calculateCycleTimes($cardHistory);
         }
+
+        $this->cycleTimeCalculator = new CycleTimeCalculator($this->timeCards, $this->historyCards);
+    }
+
+    public function getCardTimeData(): array
+    {
+        $cardHistoryCollection = $this->historyCards->getCardHistories();
+        foreach ($cardHistoryCollection as $cardHistory) {
+            $this->cycleTimeCalculator->execute($cardHistory);
+        }
+
+        return $this->cycleTimeCalculator->getTimeCards();
     }
 
     private function createTimeCardIfNotExists(HistoryCard $cardHistory) {
         if (!$this->existsCardTime($cardHistory->getId())) {
-            $this->cardTime[] = TimeCard::create(
+            $this->timeCards[] = TimeCard::create(
                 $cardHistory->getId(),
                 $cardHistory->getTitle(),
-                $this->cycleTimeColumns
+                $this->cycleTimeCollection
             );
         }
     }
 
     private function existsCardTime(string $id): bool
     {
-        foreach ($this->cardTime as $cardTime) {
+        foreach ($this->timeCards as $cardTime) {
             if ($cardTime->getId() === $id) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    public function getCardTimeData(): array
-    {
-        return $this->cardTime;
-    }
-
-    private function calculateCycleTimes(HistoryCard $cardHistory)
-    {
-        foreach ($this->cardTime as $cardTime) {
-            if ($cardTime->getId() !== $cardHistory->getId()) {
-                continue;
-            }
-
-            $from = $this->historyCards->getByCardIdAndTo($cardTime->getId(), $cardHistory->getFrom());
-            $to = $this->historyCards->getByCardIdAndTo($cardTime->getId(), $cardHistory->getTo());
-
-            if ($from === null || $to === null) {
-                continue;
-            }
-
-            $cardTime->calculateDayDifferenceBetweenColumns(
-                $cardHistory->getFrom(),
-                $from,
-                $cardHistory->getTo(),
-                $to
-            );
-        }
     }
 }

@@ -23,6 +23,6 @@ class CycleTimeColumnTest  extends TestCase
 
         $this->assertEquals($from, $cycleTimeColumn->getFrom());
         $this->assertEquals($to, $cycleTimeColumn->getTo());
-        $this->assertNull($to, $cycleTimeColumn->getValue());
+        $this->assertNull($cycleTimeColumn->getValue());
     }
 }

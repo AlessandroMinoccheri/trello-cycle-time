@@ -29,10 +29,10 @@ class TimeCard
     public static function create(
         string $cardId,
         string $cardTitle,
-        array $cycleTimeColumns
+        array $cycleTimeCollection
     ): TimeCard
     {
-        return new self($cardId, $cardTitle, $cycleTimeColumns);
+        return new self($cardId, $cardTitle, $cycleTimeCollection);
     }
 
     /**
