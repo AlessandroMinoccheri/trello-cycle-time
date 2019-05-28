@@ -11,18 +11,16 @@ class TimeCards
     private $timeCards;
     private $cycleTimeCollection;
     private $historyCards;
+    private $cardHistoryCollection;
 
     public function __construct(HistoryCards $historyCards)
     {
         $this->timeCards = [];
 
         $this->historyCards = $historyCards;
-        $cardHistoryCollection = $historyCards->getCardHistories();
+        $this->cardHistoryCollection = $historyCards->getCardHistories();
 
-        $cycleTimeCollection = new CycleTimesCollection();
-        $this->cycleTimeCollection = $cycleTimeCollection->get($cardHistoryCollection);
-
-        foreach ($cardHistoryCollection as $cardHistory) {
+        foreach ($this->cardHistoryCollection as $cardHistory) {
             $this->createTimeCardIfNotExists($cardHistory);
         }
     }
@@ -34,6 +32,9 @@ class TimeCards
 
     private function createTimeCardIfNotExists(HistoryCard $cardHistory) {
         if (!$this->existsCardTime($cardHistory->getId())) {
+            $cycleTimeCollection = new CycleTimesCollection();
+            $this->cycleTimeCollection = $cycleTimeCollection->get($this->cardHistoryCollection);
+
             $this->timeCards[] = TimeCard::create(
                 $cardHistory->getId(),
                 $cardHistory->getTitle(),
