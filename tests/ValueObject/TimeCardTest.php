@@ -29,19 +29,19 @@ class TimeCardTest extends TestCase
         $this->cardHistory->getFrom()->willReturn('from');
         $this->cardHistory->getTo()->willReturn('to');
 
-        $cycleTimeColumnKey = [
+        /*$cycleTimeColumnKey = [
             CycleTime::createFromCardHistory($this->cardHistory->reveal())
-        ];
+        ];*/
 
-        $this->cardTime = TimeCard::create($this->id, $this->title, $cycleTimeColumnKey);
+        $this->cardTime = TimeCard::create($this->id, $this->title);
     }
 
     public function testCreateCardTime()
     {
-        $expectedCycleTime = CycleTime::createFromCardHistory($this->cardHistory->reveal());
+        //$expectedCycleTime = CycleTime::createFromCardHistory($this->cardHistory->reveal());
         $this->assertEquals($this->id, $this->cardTime->getId());
         $this->assertEquals($this->title, $this->cardTime->getTitle());
-        $this->assertEquals([$expectedCycleTime], $this->cardTime->getCycleTimes());
+        //$this->assertEquals([$expectedCycleTime], $this->cardTime->getCycleTimes());
     }
 
     public function testSetCycleTimeColumnsByKey()

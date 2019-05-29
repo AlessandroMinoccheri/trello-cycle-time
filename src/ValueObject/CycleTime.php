@@ -46,6 +46,13 @@ class CycleTime
         return new self($from, $to, $value, $name);
     }
 
+    public static function createWithValue(string $from, string $to, string $value): CycleTime
+    {
+        $name = $from . '_' . $to;
+
+        return new self($from, $to, $value, $name);
+    }
+
     /**
      * @return string
      */

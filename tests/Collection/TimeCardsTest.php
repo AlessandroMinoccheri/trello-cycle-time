@@ -43,12 +43,8 @@ class TimeCardsTest extends TestCase
 
         $this->assertCount(1, $timeCards);
 
-        $expectedCycleTime = ['from_to' =>
-            CycleTime::createFromCardHistory($historyCard->reveal())
-        ];
-
         $this->assertEquals($id, $timeCards[0]->getId());
         $this->assertEquals($title, $timeCards[0]->getTitle());
-        $this->assertEquals($expectedCycleTime, $timeCards[0]->getCycleTimes());
+        $this->assertEquals([], $timeCards[0]->getCycleTimes());
     }
 }

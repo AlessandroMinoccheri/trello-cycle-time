@@ -19,20 +19,19 @@ class TimeCard
      */
     private $cycleTimes;
 
-    private function __construct(string $id, string $title, array $cycleTimes)
+    private function __construct(string $id, string $title)
     {
         $this->id = $id;
         $this->title = $title;
-        $this->cycleTimes = $cycleTimes;
+        $this->cycleTimes = [];
     }
 
     public static function create(
         string $cardId,
-        string $cardTitle,
-        array $cycleTimeCollection
+        string $cardTitle
     ): TimeCard
     {
-        return new self($cardId, $cardTitle, $cycleTimeCollection);
+        return new self($cardId, $cardTitle);
     }
 
     /**
@@ -77,12 +76,14 @@ class TimeCard
 
     public function setCycleTimesByFromAndTo(string $from, string $to, $value)
     {
-        foreach ($this->cycleTimes as $cycleTime) {
+        $cycleTime = CycleTime::createWithValue($from, $to, $value);
+        $this->cycleTimes[] = $cycleTime;
+        /*foreach ($this->cycleTimes as $cycleTime) {
             if ($cycleTime->getFrom() === $from && $cycleTime->getTo() === $to) {
                 echo "\n title: ". $this->getTitle() . " from: ". $from . " to: " . $to . " value: " . $value .  " \n";
                 return $cycleTime->setValue($value);
             }
-        }
+        }*/
     }
 
     public function calculateDayDifferenceBetweenColumns(string $fromKey, string $from, string $toKey, string $to)

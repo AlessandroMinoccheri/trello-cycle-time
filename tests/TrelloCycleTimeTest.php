@@ -14,7 +14,6 @@ class TrelloCycleTimeTest extends TestCase
 
         //BOARD TEST su trello
 
-
         //$trelloCycleTime->getAll();
     }
 }
