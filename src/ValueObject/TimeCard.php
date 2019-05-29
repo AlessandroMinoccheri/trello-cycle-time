@@ -78,12 +78,6 @@ class TimeCard
     {
         $cycleTime = CycleTime::createWithValue($from, $to, $value);
         $this->cycleTimes[] = $cycleTime;
-        /*foreach ($this->cycleTimes as $cycleTime) {
-            if ($cycleTime->getFrom() === $from && $cycleTime->getTo() === $to) {
-                echo "\n title: ". $this->getTitle() . " from: ". $from . " to: " . $to . " value: " . $value .  " \n";
-                return $cycleTime->setValue($value);
-            }
-        }*/
     }
 
     public function calculateDayDifferenceBetweenColumns(string $fromKey, string $from, string $toKey, string $to)
