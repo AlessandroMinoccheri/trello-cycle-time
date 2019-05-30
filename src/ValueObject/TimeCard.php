@@ -63,7 +63,7 @@ class TimeCard
      * @param string $toKey
      * @return string|null
      */
-    public function getCycleTimesByFromAndTo(string $fromKey, string $toKey) :?string
+    public function getCycleTimesByFromAndTo(string $fromKey, string $toKey): ?string
     {
         foreach ($this->cycleTimes as $cycleTime) {
             if ($cycleTime->getFrom() === $fromKey && $cycleTime->getTo() === $toKey) {
@@ -80,9 +80,14 @@ class TimeCard
         $this->cycleTimes[] = $cycleTime;
     }
 
-    public function calculateDayDifferenceBetweenColumns(string $fromKey, string $from, string $toKey, string $to)
+    public function calculateDayDifferenceBetweenColumns(
+        string $fromKey,
+        string $fromDate,
+        string $toKey,
+        string $toDate
+    )
     {
-        $dateDifference = strtotime($to) - strtotime($from);
+        $dateDifference = strtotime($toDate) - strtotime($fromDate);
 
         $dayDifference = round($dateDifference / (60 * 60 * 24));
         $this->setCycleTimesByFromAndTo($fromKey, $toKey, $dayDifference);

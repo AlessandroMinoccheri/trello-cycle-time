@@ -43,6 +43,8 @@ class HistoryCards
     }
 
     /**
+     * @param string $cardId
+     * @param string $to
      * @return null|string
      */
     public function getByCardIdAndTo(string $cardId, string $to): ?string

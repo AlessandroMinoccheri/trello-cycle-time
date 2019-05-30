@@ -64,8 +64,6 @@ class TrelloCycleTime
             $cycleTimeCalculator->execute($cardHistory);
         }
 
-        var_dump($cycleTimeCalculator->getTimeCards());
-
         return $cycleTimeCalculator->getTimeCards();
     }
 

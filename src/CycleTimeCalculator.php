@@ -33,18 +33,18 @@ class CycleTimeCalculator
                 continue;
             }
 
-            $from = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getFrom());
-            $to = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getTo());
+            $fromDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getFrom());
+            $toDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getTo());
 
-            if ($from === null || $to === null) {
+            if ($fromDate === null || $toDate === null) {
                 continue;
             }
 
             $timeCard->calculateDayDifferenceBetweenColumns(
                 $cardHistory->getFrom(),
-                $from,
+                $fromDate,
                 $cardHistory->getTo(),
-                $to
+                $toDate
             );
         }
     }

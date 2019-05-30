@@ -37,8 +37,7 @@ class TimeCards
 
             $this->timeCards[] = TimeCard::create(
                 $cardHistory->getId(),
-                $cardHistory->getTitle(),
-                $this->cycleTimeCollection
+                $cardHistory->getTitle()
             );
         }
     }
