@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrelloCycleTime\Repository;
 
 use TrelloCycleTime\Client\Client;

@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alessandrominoccheri
- * Date: 2019-05-02
- * TimeCard: 08:09
- */
+
+declare(strict_types=1);
 
 namespace TrelloCycleTime\ValueObject;
 

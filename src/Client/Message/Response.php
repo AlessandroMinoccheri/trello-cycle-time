@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrelloCycleTime\Client\Message;
 
 use TrelloCycleTime\Exception\InvalidJsonException;
