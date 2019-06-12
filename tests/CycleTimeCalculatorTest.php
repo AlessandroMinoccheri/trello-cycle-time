@@ -22,6 +22,7 @@ class CycleTimeCalculatorTest extends TestCase
     public function testExecuteWithEmptyData()
     {
         $historyCard = $this->prophesize(HistoryCard::class);
+        $this->historyCards->getCardHistories()->willReturn([]);
         $this->cycleTimeCalculator->execute($historyCard->reveal());
 
         $this->assertEquals([], $this->cycleTimeCalculator->getTimeCards());
@@ -44,6 +45,7 @@ class CycleTimeCalculatorTest extends TestCase
         $timeCard->getId()->willReturn($cardId);
         $timeCard->calculateDayDifferenceBetweenColumns($fromKey, $fromDate, $toKey, $toDate)->shouldBeCalled();
 
+        $this->historyCards->getCardHistories()->willReturn([$historyCard->reveal()]);
         $this->historyCards->getByCardIdAndTo($cardId, $fromKey)->willReturn($fromDate);
         $this->historyCards->getByCardIdAndTo($cardId, $toKey)->willReturn($toDate);
 

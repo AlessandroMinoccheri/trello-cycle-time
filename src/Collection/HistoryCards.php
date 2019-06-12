@@ -4,35 +4,52 @@ declare(strict_types=1);
 
 namespace TrelloCycleTime\Collection;
 
+use TrelloCycleTime\Client\Client;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class HistoryCards
 {
     private $cardHistories;
 
-    private function __construct(array $cardHistories)
+    private function __construct(Client $client, array $cards)
     {
-        $this->cardHistories = $cardHistories;
+        $this->cardHistories = [];
+        $creationCards = [];
+        $historyCards = [];
 
-        return $this;
+        foreach ($cards as $card) {
+            sleep(5);
+
+            $creationCard = $client->findCreationCard($card['id']);
+
+            $creationCards = array_merge($creationCards, $creationCard);
+
+            $historyCard = $client->findAllCardHistory($card['id']);
+            $historyCards = array_merge($historyCards, $historyCard);
+        }
+
+        $this->createFromArray($historyCards);
+        $this->addCreationCards($creationCards);
     }
 
-    public static function createFromArray(array $cardHistoryData)
+    public static function createFromCards(Client $client, array $cards)
     {
-        $cardHistories = [];
+        return new self($client, $cards);
+    }
+
+    private function createFromArray(array $cardHistoryData)
+    {
         foreach ($cardHistoryData as $histories) {
             if ([] === $histories) {
                 continue;
             }
 
             $cardHistory = HistoryCard::createFromArray($histories);
-            $cardHistories[] = $cardHistory;
+            $this->cardHistories[] = $cardHistory;
         }
-
-        return new self($cardHistories);
     }
 
-    public function addCreationCards(array $cardCreationData)
+    private function addCreationCards(array $cardCreationData)
     {
         foreach ($cardCreationData as $creation) {
             if ([] === $creation) {

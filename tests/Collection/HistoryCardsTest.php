@@ -3,14 +3,22 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use TrelloCycleTime\Client\Client;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class HistoryCardsTest extends TestCase
 {
+    private $client;
+
+    public function setup()
+    {
+        $this->client = $this->prophesize(Client::class);
+    }
+
     public function testCreateWithoutResultsReturnEmptyArray()
     {
-        $cardHistoryCollection = HistoryCards::createFromArray([]);
+        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), []);
         $this->assertEquals([], $cardHistoryCollection->getCardHistories());
     }
 
@@ -26,8 +34,15 @@ class HistoryCardsTest extends TestCase
         $listAfter2 = 'listAfter2';
         $date2 = '2019-04-29 10:00:00';
 
+        $cards = [
+            [
+                'id' => $cardId
+            ]
+        ];
+
         $data = [
             [
+                'id' => $cardId,
                 'data' => [
                     'card' => [
                         'id' => $cardId,
@@ -60,7 +75,9 @@ class HistoryCardsTest extends TestCase
             ]
         ];
 
-        $cardHistoryCollection = HistoryCards::createFromArray($data);
+        $this->client->findCreationCard($cardId)->willReturn([]);
+        $this->client->findAllCardHistory($cardId)->willReturn($data);
+        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), $cards);
 
         $cardHistory = HistoryCard::createFromArray([
             'id' => $cardId,
@@ -97,10 +114,7 @@ class HistoryCardsTest extends TestCase
         ]);
 
         $expected = [$cardHistory, $cardHistory2];
-
-        $this->assertEquals($expected, $cardHistoryCollection->getCardHistories());
-
-
-
+        $histories = $cardHistoryCollection->getCardHistories();
+        $this->assertEquals($expected, $histories);
     }
 }

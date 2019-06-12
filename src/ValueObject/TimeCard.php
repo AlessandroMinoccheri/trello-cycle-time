@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TrelloCycleTime\ValueObject;
 
 
-class TimeCard
+class TimeCard implements \JsonSerializable
 {
     /**
      * @var string
@@ -62,9 +62,9 @@ class TimeCard
     /**
      * @param string $fromKey
      * @param string $toKey
-     * @return string|null
+     * @return float|null
      */
-    public function getCycleTimesByFromAndTo(string $fromKey, string $toKey): ?string
+    public function getCycleTimesByFromAndTo(string $fromKey, string $toKey): ?float
     {
         foreach ($this->cycleTimes as $cycleTime) {
             if ($cycleTime->getFrom() === $fromKey && $cycleTime->getTo() === $toKey) {
@@ -75,10 +75,9 @@ class TimeCard
         return null;
     }
 
-    public function setCycleTimesByFromAndTo(string $from, string $to, $value)
+    public function setCycleTimesByFromAndTo(string $from, string $to, float $value)
     {
-        $cycleTime = CycleTime::createWithValue($from, $to, $value);
-        $this->cycleTimes[] = $cycleTime;
+        $this->cycleTimes[] = CycleTime::createWithValue($from, $to, $value);
     }
 
     public function calculateDayDifferenceBetweenColumns(
@@ -92,5 +91,22 @@ class TimeCard
 
         $dayDifference = round($dateDifference / (60 * 60 * 24));
         $this->setCycleTimesByFromAndTo($fromKey, $toKey, $dayDifference);
+    }
+
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'cycleTimes' => $this->cycleTimes
+        ];
     }
 }

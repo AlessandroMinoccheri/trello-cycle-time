@@ -8,69 +8,38 @@ use TrelloCycleTime\Client\Client;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
 
-class TrelloCycleTime
+final class TrelloCycleTime
 {
-
-    /**
-     * @var string
-     */
-    private $apiKey;
-    /**
-     * @var string
-     */
-    private $token;
-    /**
-     * @var string
-     */
-    private $boardId;
 
     private $client;
 
-    private $repository;
+    private $historyCardsCollection;
 
-    public function __construct(string $apiKey, string $token, string $boardId)
+    private $timeCards;
+
+    public function __construct(Client $client)
     {
-        $this->apiKey = $apiKey;
-        $this->token = $token;
-        $this->boardId = $boardId;
-        $this->client = new Client();
-        $this->repository = new Repository\CardRepository($apiKey, $token, $this->client);
+        $this->client = $client;
+        $this->timeCards = new TimeCards();
     }
 
     public function getAll() :array
     {
-        $cards = $this->repository->findAllCardFromBoardId($this->boardId);
-        $creationCards = [];
-        $historyCards = [];
+        $cards = $this->client->findAllCards();
 
-        foreach ($cards as $card) {
-            sleep(5);
+        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards);
 
-            $creationCard = $this->repository->findCreationCard($card['id']);
-
-            $creationCards = array_merge($creationCards, $creationCard);
-
-            $historyCard = $this->repository->findAllCardHistory($card['id']);
-            $historyCards = array_merge($historyCards, $historyCard);
-        }
-
-        $historyCardsCollection = HistoryCards::createFromArray($historyCards);
-        $historyCardsCollection->addCreationCards($creationCards);
-
-        $timeCards = new TimeCards($historyCardsCollection);
-
-        $cycleTimeCalculator = new CycleTimeCalculator($timeCards->getCardTimeData(), $historyCardsCollection);
-
-        $cardHistoryCollection = $historyCardsCollection->getCardHistories();
-        foreach ($cardHistoryCollection as $cardHistory) {
-            $cycleTimeCalculator->execute($cardHistory);
-        }
-
-        return $cycleTimeCalculator->getTimeCards();
+        return $this->calculateTimeCardsCycleTime();
     }
 
-    public function setClient(Client $client)
+    private function calculateTimeCardsCycleTime()
     {
-        $this->client = $client;
+        $timeCards = $this->timeCards->getFromHistoryCards($this->historyCardsCollection);
+
+        $cycleTimeCalculator = new CycleTimeCalculator($timeCards, $this->historyCardsCollection);
+        $cycleTimeCalculator->execute();
+
+
+        return $cycleTimeCalculator->getTimeCards();
     }
 }
