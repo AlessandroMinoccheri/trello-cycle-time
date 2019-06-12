@@ -7,7 +7,6 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
-use TrelloCycleTime\ValueObject\CycleTime;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class TimeCardsTest extends TestCase
@@ -17,9 +16,10 @@ class TimeCardsTest extends TestCase
         $historyCards = $this->prophesize(HistoryCards::class);
         $historyCards->getCardHistories()->willReturn([]);
 
-        $timeCards = new TimeCards($historyCards->reveal());
+        $timeCards = new TimeCards();
+        $timeCards = $timeCards->getFromHistoryCards($historyCards->reveal());
 
-        $this->assertEquals([], $timeCards->getCardTimeData());
+        $this->assertEquals([], $timeCards);
     }
 
     public function testCreateCollection()
@@ -38,8 +38,8 @@ class TimeCardsTest extends TestCase
         $historyCards = $this->prophesize(HistoryCards::class);
         $historyCards->getCardHistories()->willReturn([$historyCard->reveal()]);
 
-        $timeCardsCollection = new TimeCards($historyCards->reveal());
-        $timeCards = $timeCardsCollection->getCardTimeData();
+        $timeCards = new TimeCards();
+        $timeCards = $timeCards->getFromHistoryCards($historyCards->reveal());
 
         $this->assertCount(1, $timeCards);
 

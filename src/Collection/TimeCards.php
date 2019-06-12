@@ -15,16 +15,21 @@ class TimeCards
     private $historyCards;
     private $cardHistoryCollection;
 
-    public function __construct(HistoryCards $historyCards)
+    public function __construct()
     {
         $this->timeCards = [];
+    }
 
+    public function getFromHistoryCards(HistoryCards $historyCards) :array
+    {
         $this->historyCards = $historyCards;
         $this->cardHistoryCollection = $historyCards->getCardHistories();
 
         foreach ($this->cardHistoryCollection as $cardHistory) {
             $this->createTimeCardIfNotExists($cardHistory);
         }
+
+        return $this->getCardTimeData();
     }
 
     public function getCardTimeData(): array

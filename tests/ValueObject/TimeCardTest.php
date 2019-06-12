@@ -6,7 +6,6 @@ namespace Tests\ValueObject;
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\ValueObject\HistoryCard;
 use TrelloCycleTime\ValueObject\TimeCard;
-use TrelloCycleTime\ValueObject\CycleTime;
 
 class TimeCardTest extends TestCase
 {
@@ -41,9 +40,9 @@ class TimeCardTest extends TestCase
 
     public function testSetCycleTimeColumnsByKey()
     {
-        $this->cardTime->setCycleTimesByFromAndTo('from', 'to', 'value');
+        $this->cardTime->setCycleTimesByFromAndTo('from', 'to', 100);
 
         $cycleTime = $this->cardTime->getCycleTimesByFromAndTo('from', 'to');
-        $this->assertEquals('value', $cycleTime);
+        $this->assertEquals(100, $cycleTime);
     }
 }

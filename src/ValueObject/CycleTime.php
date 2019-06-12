@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TrelloCycleTime\ValueObject;
 
 
-class CycleTime
+class CycleTime implements \JsonSerializable
 {
     /**
      * @var string
@@ -16,7 +16,7 @@ class CycleTime
      */
     private $to;
     /**
-     * @var string
+     * @var float
      */
     private $value;
     /**
@@ -24,7 +24,7 @@ class CycleTime
      */
     private $name;
 
-    private function __construct(string $from, string $to, ?string $value, string $name)
+    private function __construct(string $from, string $to, ?float $value, string $name)
     {
         $this->from = $from;
         $this->to = $to;
@@ -42,7 +42,7 @@ class CycleTime
         return new self($from, $to, $value, $name);
     }
 
-    public static function createWithValue(string $from, string $to, string $value): CycleTime
+    public static function createWithValue(string $from, string $to, float $value): CycleTime
     {
         $name = $from . '_' . $to;
 
@@ -66,9 +66,9 @@ class CycleTime
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getValue(): ?string
+    public function getValue(): ?float
     {
         return $this->value;
     }
@@ -84,5 +84,22 @@ class CycleTime
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'from' => $this->from,
+            'to' => $this->to,
+            'value' => $this->value,
+            'name' => $this->name
+        ];
     }
 }
