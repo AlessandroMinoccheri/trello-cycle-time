@@ -68,16 +68,16 @@ class TimeCard implements \JsonSerializable
     {
         foreach ($this->cycleTimes as $cycleTime) {
             if ($cycleTime->getFrom() === $fromKey && $cycleTime->getTo() === $toKey) {
-                return $cycleTime->getValue();
+                return $cycleTime->getDays();
             }
         }
 
         return null;
     }
 
-    public function setCycleTimesByFromAndTo(string $from, string $to, float $value)
+    public function setCycleTimesByFromAndTo(string $from, string $to, float $days)
     {
-        $this->cycleTimes[] = CycleTime::createWithValue($from, $to, $value);
+        $this->cycleTimes[] = CycleTime::createWithDays($from, $to, $days);
     }
 
     public function calculateDayDifferenceBetweenColumns(
