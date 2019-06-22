@@ -223,13 +223,13 @@ class TrelloCycleTimeTest extends TestCase
                 0 => [
                     'from' => 'Doing',
                     'to' => 'DOne',
-                    'value' => '6',
+                    'days' => '6',
                     'name' => 'Doing_DOne'
                 ],
                 1 => [
                     'from' => 'ToDo',
                     'to' => 'Doing',
-                    'value' => '1',
+                    'days' => '1',
                     'name' => 'ToDo_Doing'
                 ]
             ]
