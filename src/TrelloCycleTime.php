@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TrelloCycleTime;
 
-use TrelloCycleTime\Client\Client;
+use TrelloCycleTime\Client\HttpClient;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
 
@@ -17,7 +17,7 @@ final class TrelloCycleTime
 
     private $timeCards;
 
-    public function __construct(Client $client)
+    public function __construct(HttpClient $client)
     {
         $this->client = $client;
         $this->timeCards = new TimeCards();

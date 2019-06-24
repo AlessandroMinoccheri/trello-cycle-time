@@ -4,14 +4,14 @@ namespace Tests;
 
 
 use PHPUnit\Framework\TestCase;
-use TrelloCycleTime\Client\Client;
+use TrelloCycleTime\Client\HttpClient;
 use TrelloCycleTime\TrelloCycleTime;
 
 class TrelloCycleTimeTest extends TestCase
 {
     public function testGetAllWithoutCards()
     {
-        $client = $this->prophesize(Client::class);
+        $client = $this->prophesize(HttpClient::class);
 
         $client->findAllCards()->willReturn([]);
 
@@ -24,7 +24,7 @@ class TrelloCycleTimeTest extends TestCase
 
     public function testGetAll()
     {
-        $client = $this->prophesize(Client::class);
+        $client = $this->prophesize(HttpClient::class);
 
         $cardId = '5cdfb33499236c320e7d772c';
         $cards = [
