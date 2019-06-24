@@ -24,9 +24,9 @@ To use this library you need to have:
 * Trello boardId to analyze
 
 ```
-use TrelloCycleTime\Client\Client;
+use TrelloCycleTime\Client\HttpClient;
 
-$client = new Client('apikey', 'token', 'boardId');
+$client = new HttpClient('apikey', 'token', 'boardId');
 $trelloCycleTime = new TrelloCycleTime($client);
 
 $cycleTimes = $trelloCycleTime->getAll();
