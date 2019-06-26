@@ -9,7 +9,7 @@ use TrelloCycleTime\Client\Message\Response;
 use TrelloCycleTime\Exception\RuntimeException;
 use GuzzleHttp\Client as GuzzleClient;
 
-class HttpClient implements HttpClientInterface
+class TrelloApiClient implements HttpClientInterface
 {
     const GET_ALL_CARDS_URL = 'https://api.trello.com/1/boards/{boardId}/cards/?key={apiKey}&token={token}';
 
@@ -25,35 +25,30 @@ class HttpClient implements HttpClientInterface
      * @var string
      */
     private $token;
-    /**
-     * @var string
-     */
-    private $boardId;
 
-    public function __construct(string $apiKey, string $token, string $boardId)
+    public function __construct(string $apiKey, string $token)
     {
         $this->apiKey = $apiKey;
         $this->token = $token;
-        $this->boardId = $boardId;
     }
 
-    public function findAllCards(): array
+    public function findAllCards(string $boardId): array
     {
-        $url = $this->urlBuilder(self::GET_ALL_CARDS_URL);
+        $url = $this->urlBuilderWithBoardId(self::GET_ALL_CARDS_URL, $boardId);
 
         return Response::validate($this->createRequest($url));
     }
 
     public function findCreationCard(string $cardId): array
     {
-        $url = $this->urlBuilder(self::GET_CREATION_CARD_INFO_URL, $cardId);
+        $url = $this->urlBuilderWithCardId(self::GET_CREATION_CARD_INFO_URL, $cardId);
 
         return Response::validate($this->createRequest($url));
     }
 
     public function findAllCardHistory(string $cardId): array
     {
-        $url = $this->urlBuilder(self::GET_HISTORY_CARD_URL, $cardId);
+        $url = $this->urlBuilderWithCardId(self::GET_HISTORY_CARD_URL, $cardId);
 
         return Response::validate($this->createRequest($url));
     }
@@ -70,10 +65,18 @@ class HttpClient implements HttpClientInterface
         }
     }
 
-    protected function urlBuilder($url, $cardId = null)
+    protected function urlBuilderWithCardId($url, $cardId = null)
     {
-        $placeholder = ['{boardId}', '{cardId}', '{apiKey}', '{token}'];
-        $replaceWith = [$this->boardId, $cardId, $this->apiKey, $this->token];
+        $placeholder = ['{cardId}', '{apiKey}', '{token}'];
+        $replaceWith = [$cardId, $this->apiKey, $this->token];
+
+        return str_replace($placeholder, $replaceWith, $url);
+    }
+
+    protected function urlBuilderWithBoardId($url, $boardId = null)
+    {
+        $placeholder = ['{boardId}', '{apiKey}', '{token}'];
+        $replaceWith = [$boardId, $this->apiKey, $this->token];
 
         return str_replace($placeholder, $replaceWith, $url);
     }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace TrelloCycleTime\Collection;
 
-use TrelloCycleTime\Client\HttpClient;
+use TrelloCycleTime\Client\TrelloApiClient;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class HistoryCards
 {
     private $cardHistories;
 
-    private function __construct(HttpClient $client, array $cards)
+    private function __construct(TrelloApiClient $client, array $cards)
     {
         $this->cardHistories = [];
         $creationCards = [];
@@ -32,7 +32,7 @@ class HistoryCards
         $this->addCreationCards($creationCards);
     }
 
-    public static function createFromCards(HttpClient $client, array $cards)
+    public static function createFromCards(TrelloApiClient $client, array $cards)
     {
         return new self($client, $cards);
     }
