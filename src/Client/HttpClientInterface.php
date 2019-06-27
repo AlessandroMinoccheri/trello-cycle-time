@@ -6,7 +6,7 @@ namespace TrelloCycleTime\Client;
 
 interface HttpClientInterface
 {
-    public function findAllCards(): array;
+    public function findAllCards(string $boardId): array;
 
     public function findCreationCard(string $cardId): array;
 

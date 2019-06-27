@@ -4,14 +4,14 @@
 namespace Tests\Client;
 
 use PHPUnit\Framework\TestCase;
-use TrelloCycleTime\Client\HttpClient;
+use TrelloCycleTime\Client\TrelloApiClient;
 
-class HttpClientTest extends TestCase
+class TrelloApiClientTest extends TestCase
 {
     public function testGetAllCards()
     {
-        $httpClient = new HttpClientMock('apiKey', 'token', 'boardId');
-        $response = $httpClient->findAllCards();
+        $trelloApiClient = new TrelloApiClientMock('apiKey', 'token');
+        $response = $trelloApiClient->findAllCards('boardId');
 
         $this->assertEquals(
             [
@@ -23,8 +23,8 @@ class HttpClientTest extends TestCase
 
     public function testFindCreationCards()
     {
-        $httpClient = new HttpClientMock('apiKey', 'token', 'boardId');
-        $response = $httpClient->findCreationCard('cardId');
+        $trelloApiClient = new TrelloApiClientMock('apiKey', 'token');
+        $response = $trelloApiClient->findCreationCard('cardId');
 
         $this->assertEquals(
             [
@@ -36,8 +36,8 @@ class HttpClientTest extends TestCase
 
     public function testFindAllCardHistory()
     {
-        $httpClient = new HttpClientMock('apiKey', 'token', 'boardId');
-        $response = $httpClient->findAllCardHistory('cardId');
+        $trelloApiClient = new TrelloApiClientMock('apiKey', 'token');
+        $response = $trelloApiClient->findAllCardHistory('cardId');
 
         $this->assertEquals(
             [
@@ -48,7 +48,7 @@ class HttpClientTest extends TestCase
     }
 }
 
-class HttpClientMock extends HttpClient
+class TrelloApiClientMock extends TrelloApiClient
 {
     public function createRequest(string $url)
     {

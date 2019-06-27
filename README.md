@@ -24,15 +24,18 @@ To use this library you need to have:
 * Trello boardId to analyze
 
 ```
-use TrelloCycleTime\Client\HttpClient;
+use TrelloCycleTime\Client\TrelloApiClient;
 
-$client = new HttpClient('apikey', 'token', 'boardId');
-$trelloCycleTime = new TrelloCycleTime($client);
+$client = new TrelloApiClient('apikey', 'token');
+$board = new TrelloBoard($client, 'board-id');
 
-$cycleTimes = $trelloCycleTime->getAll();
+$transitions = $board->getTransitions();
+
+var_dump($transitions);
+
 ```
 
-the response of ```getAll``` is an array that contains some information for example:
+The response of ```getTransitions``` is an array that contains some information for example:
 
 ```
 [0 => [

@@ -4,27 +4,28 @@ namespace Tests;
 
 
 use PHPUnit\Framework\TestCase;
-use TrelloCycleTime\Client\HttpClient;
-use TrelloCycleTime\TrelloCycleTime;
+use TrelloCycleTime\Client\TrelloApiClient;
+use TrelloCycleTime\TrelloBoard;
 
-class TrelloCycleTimeTest extends TestCase
+class TrelloBoardTest extends TestCase
 {
     public function testGetAllWithoutCards()
     {
-        $client = $this->prophesize(HttpClient::class);
+        $client = $this->prophesize(TrelloApiClient::class);
+        $boardId = 'boardId';
 
-        $client->findAllCards()->willReturn([]);
+        $client->findAllCards($boardId)->willReturn([]);
 
-        $trelloCycleTime = new TrelloCycleTime($client->reveal());
+        $trelloBoard = new TrelloBoard($client->reveal(), $boardId);
 
-        $cycleTimes = $trelloCycleTime->getAll();
+        $cycleTimes = $trelloBoard->getTransitions();
 
         $this->assertEquals([], $cycleTimes);
     }
 
     public function testGetAll()
     {
-        $client = $this->prophesize(HttpClient::class);
+        $client = $this->prophesize(TrelloApiClient::class);
 
         $cardId = '5cdfb33499236c320e7d772c';
         $cards = [
@@ -206,15 +207,17 @@ class TrelloCycleTimeTest extends TestCase
     }
 ]', true);
 
-        $client->findAllCards()->willReturn($cards);
+        $boardId = 'boardId';
+
+        $client->findAllCards($boardId)->willReturn($cards);
 
         $client->findCreationCard($cardId)->willReturn($creationCard);
 
         $client->findAllCardHistory($cardId)->willReturn($cardHistory);
 
-        $trelloCycleTime = new TrelloCycleTime($client->reveal());
+        $trelloBoard = new TrelloBoard($client->reveal(), $boardId);
 
-        $cycleTimes = $trelloCycleTime->getAll();
+        $cycleTimes = $trelloBoard->getTransitions();
 
         $expected = [0 => [
             'id' => '5cdfb33499236c320e7d772c',

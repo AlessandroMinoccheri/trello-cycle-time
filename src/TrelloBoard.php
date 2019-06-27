@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace TrelloCycleTime;
 
-use TrelloCycleTime\Client\HttpClient;
+use TrelloCycleTime\Client\TrelloApiClient;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
 
-final class TrelloCycleTime
+final class TrelloBoard
 {
 
     private $client;
@@ -16,16 +16,21 @@ final class TrelloCycleTime
     private $historyCardsCollection;
 
     private $timeCards;
+    /**
+     * @var string
+     */
+    private $boardId;
 
-    public function __construct(HttpClient $client)
+    public function __construct(TrelloApiClient $client, string $boardId)
     {
         $this->client = $client;
         $this->timeCards = new TimeCards();
+        $this->boardId = $boardId;
     }
 
-    public function getAll() :array
+    public function getTransitions() :array
     {
-        $cards = $this->client->findAllCards();
+        $cards = $this->client->findAllCards($this->boardId);
 
         $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards);
 

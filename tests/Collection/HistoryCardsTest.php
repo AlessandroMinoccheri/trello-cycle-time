@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use TrelloCycleTime\Client\HttpClient;
+use TrelloCycleTime\Client\TrelloApiClient;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
@@ -13,7 +13,7 @@ class HistoryCardsTest extends TestCase
 
     public function setup()
     {
-        $this->client = $this->prophesize(HttpClient::class);
+        $this->client = $this->prophesize(TrelloApiClient::class);
     }
 
     public function testCreateWithoutResultsReturnEmptyArray()
