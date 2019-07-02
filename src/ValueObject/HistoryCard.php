@@ -15,7 +15,7 @@ class HistoryCard
      */
     private $title;
     /**
-     * @var string
+     * @var string|null
      */
     private $from;
     /**

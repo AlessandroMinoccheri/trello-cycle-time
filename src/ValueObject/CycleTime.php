@@ -16,7 +16,7 @@ class CycleTime implements \JsonSerializable
      */
     private $to;
     /**
-     * @var float
+     * @var float|null
      */
     private $days;
     /**
@@ -34,7 +34,7 @@ class CycleTime implements \JsonSerializable
 
     public static function createFromCardHistory(HistoryCard $cardHistory): CycleTime
     {
-        $from = $cardHistory->getFrom();
+        $from = $cardHistory->getFrom() ?? '';
         $to = $cardHistory->getTo();
         $name = $from . '_' . $to;
         $days = null;
@@ -73,7 +73,7 @@ class CycleTime implements \JsonSerializable
         return $this->days;
     }
 
-    public function setDays(string $days)
+    public function setDays(float $days) :?float
     {
         return $this->days = $days;
     }
