@@ -6,7 +6,7 @@ checks:
 build:
   environment:
     php:
-      version: 7.1.0
+      version: 7.1.3
   tests:
     override:
       -

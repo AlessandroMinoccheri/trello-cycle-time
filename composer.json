@@ -28,7 +28,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": "*",
-    "vimeo/psalm": "^3.4"
+    "vimeo/psalm": "^3.4",
+    "phpstan/phpstan": "^0.11.8",
+    "jangregor/phpstan-prophecy": "^0.4.1"
   },
   "autoload": {
     "psr-4": {

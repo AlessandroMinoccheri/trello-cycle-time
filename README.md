@@ -62,5 +62,12 @@ The response of ```getTransitions``` is an array that contains some information 
 In this case you can see that this card takes 1 day to pass from Todo to Doing and 6 days to pass from Doing to Done.
 
 
+## Contributing
 
+Every contribution is welcome, remember to add tests and use psalm and phpstan:
 
+````
+./vendor/bin/phpunit
+./vendor/bin/psalm
+./vendor/bin/phpstan analyse
+````
