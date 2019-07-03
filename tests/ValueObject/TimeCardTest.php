@@ -18,7 +18,7 @@ class TimeCardTest extends TestCase
 
     public function setup()
     {
-        $this->id = 1;
+        $this->id = '1';
         $this->title = 'title';
 
         $this->from = 'from';

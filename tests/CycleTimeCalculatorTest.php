@@ -54,6 +54,6 @@ class CycleTimeCalculatorTest extends TestCase
         ];
 
         $this->cycleTimeCalculator = new CycleTimeCalculator($timeCardsCollection, $this->historyCards->reveal());
-        $this->cycleTimeCalculator->execute($historyCard->reveal());
+        $this->cycleTimeCalculator->execute();
     }
 }
