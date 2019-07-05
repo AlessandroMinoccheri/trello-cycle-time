@@ -5,6 +5,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Client\TrelloApiClient;
+use TrelloCycleTime\Collection\CardsIdCollection;
 use TrelloCycleTime\TrelloBoard;
 
 class TrelloBoardTest extends TestCase
@@ -23,7 +24,7 @@ class TrelloBoardTest extends TestCase
         $this->assertEquals([], $cycleTimes);
     }
 
-    public function testGetAll()
+    public function testGetTransitions()
     {
         $client = $this->prophesize(TrelloApiClient::class);
 
@@ -221,6 +222,171 @@ class TrelloBoardTest extends TestCase
 
         $expected = [0 => [
             'id' => '5cdfb33499236c320e7d772c',
+            'title' => 'prima',
+            'cycleTimes' => [
+                0 => [
+                    'from' => 'Doing',
+                    'to' => 'DOne',
+                    'days' => '6',
+                    'name' => 'Doing_DOne'
+                ],
+                1 => [
+                    'from' => 'ToDo',
+                    'to' => 'Doing',
+                    'days' => '1',
+                    'name' => 'ToDo_Doing'
+                ]
+            ]
+        ]
+        ];
+
+        $this->assertEquals($expected, $cycleTimes);
+    }
+
+    public function testGetCardTransitions()
+    {
+        $client = $this->prophesize(TrelloApiClient::class);
+
+        $id = '5cdfb33499236c320e7d772c';
+
+        $creationCard = [
+            0 => [
+                'id' => $id,
+                'idMemberCreator' => '521dbcdd68ba6dec350040ff',
+                'data' => [
+                    'board' => [
+                        'shortLink' => 'ZctgODOd',
+                        'name' => 'TEST',
+                        'id' => '5cdfb328cc5d0542a9bc5ce0'
+                    ],
+
+                    'list' => [
+                        'name' => 'ToDo',
+                        'id' => '5cdfb32f696b0a36d3186758'
+                    ],
+                    'card' => [
+                        'shortLink' => 'tZEJWg0V',
+                        'idShort' => '1',
+                        'name' => 'prima',
+                        'id' => $id
+                    ]
+                ],
+                'type' => 'createCard',
+                'date' => '2019-05-17T06:45:04.392Z',
+                'limits' => [],
+                'memberCreator' => [
+                    'id' => '521dbcdd68ba6dec350040ff',
+                    'avatarHash' => '3fab266d04a3f6f570b6a46606e133c0',
+                    'avatarUrl' => 'https://trello-avatars.s3.amazonaws.com/3fab266d04a3f6f570b6a46606e133c0',
+                    'fullName' => 'Alessandro Minoccheri',
+                    'idMemberReferrer' => '516a8b285b342af34f003c96',
+                    'initials' => 'AM'
+                ]
+            ]
+        ];
+
+
+        $cardHistory = json_decode('[
+    {
+        "id": "5ce7b60627e1bb5e0a8c60d1",
+        "idMemberCreator": "521dbcdd68ba6dec350040ff",
+        "data": {
+            "listAfter": {
+                "name": "DOne",
+                "id": "5cdfb33181899386ced12d14"
+            },
+            "listBefore": {
+                "name": "Doing",
+                "id": "5cdfb3302e078d53fd5c01f8"
+            },
+            "board": {
+                "shortLink": "ZctgODOd",
+                "name": "TEST",
+                "id": "5cdfb328cc5d0542a9bc5ce0"
+            },
+            "card": {
+                "shortLink": "jV1haDyb",
+                "idShort": 1,
+                "name": "prima",
+                "id": "5cdfb33499236c320e7d772c",
+                "idList": "5cdfb33181899386ced12d14"
+            },
+            "old": {
+                "idList": "5cdfb3302e078d53fd5c01f8"
+            }
+        },
+        "type": "updateCard",
+        "date": "2019-05-24T09:14:46.642Z",
+        "limits": {},
+        "memberCreator": {
+            "id": "521dbcdd68ba6dec350040ff",
+            "avatarHash": "3fab266d04a3f6f570b6a46606e133c0",
+            "avatarUrl": "https://trello-avatars.s3.amazonaws.com/3fab266d04a3f6f570b6a46606e133c0",
+            "fullName": "Alessandro Minoccheri",
+            "idMemberReferrer": "516a8b285b342af34f003c96",
+            "initials": "AM",
+            "nonPublic": {},
+            "nonPublicAvailable": false,
+            "username": "alessandrominoccheri1"
+        }
+    },
+    {
+        "id": "5cdfb33a2d9abb38dcaedbd8",
+        "idMemberCreator": "521dbcdd68ba6dec350040ff",
+        "data": {
+            "listAfter": {
+                "name": "Doing",
+                "id": "5cdfb3302e078d53fd5c01f8"
+            },
+            "listBefore": {
+                "name": "ToDo",
+                "id": "5cdfb32f696b0a36d3186758"
+            },
+            "board": {
+                "shortLink": "ZctgODOd",
+                "name": "TEST",
+                "id": "5cdfb328cc5d0542a9bc5ce0"
+            },
+            "card": {
+                "shortLink": "jV1haDyb",
+                "idShort": 1,
+                "name": "prima",
+                "id": "5cdfb33499236c320e7d772c",
+                "idList": "5cdfb3302e078d53fd5c01f8"
+            },
+            "old": {
+                "idList": "5cdfb32f696b0a36d3186758"
+            }
+        },
+        "type": "updateCard",
+        "date": "2019-05-18T07:24:42.415Z",
+        "limits": {},
+        "memberCreator": {
+            "id": "521dbcdd68ba6dec350040ff",
+            "avatarHash": "3fab266d04a3f6f570b6a46606e133c0",
+            "avatarUrl": "https://trello-avatars.s3.amazonaws.com/3fab266d04a3f6f570b6a46606e133c0",
+            "fullName": "Alessandro Minoccheri",
+            "idMemberReferrer": "516a8b285b342af34f003c96",
+            "initials": "AM",
+            "nonPublic": {},
+            "nonPublicAvailable": false,
+            "username": "alessandrominoccheri1"
+        }
+    }
+]', true);
+
+        $boardId = 'boardId';
+
+        $client->findCreationCard($id)->willReturn($creationCard);
+
+        $client->findAllCardHistory($id)->willReturn($cardHistory);
+
+        $trelloBoard = new TrelloBoard($client->reveal(), $boardId);
+
+        $cycleTimes = $trelloBoard->getCardTransitions($id);
+
+        $expected = [0 => [
+            'id' => $id,
             'title' => 'prima',
             'cycleTimes' => [
                 0 => [
