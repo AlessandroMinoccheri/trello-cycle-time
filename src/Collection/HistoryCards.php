@@ -11,20 +11,20 @@ class HistoryCards
 {
     private $cardHistories;
 
-    private function __construct(TrelloApiClient $client, array $cards)
+    private function __construct(TrelloApiClient $client, array $cardsId)
     {
         $this->cardHistories = [];
         $creationCards = [];
         $historyCards = [];
 
-        foreach ($cards as $card) {
+        foreach ($cardsId as $cardId) {
             sleep(5);
 
-            $creationCard = $client->findCreationCard($card['id']);
+            $creationCard = $client->findCreationCard($cardId->getId());
 
             $creationCards = array_merge($creationCards, $creationCard);
 
-            $historyCard = $client->findAllCardHistory($card['id']);
+            $historyCard = $client->findAllCardHistory($cardId->getId());
             $historyCards = array_merge($historyCards, $historyCard);
         }
 

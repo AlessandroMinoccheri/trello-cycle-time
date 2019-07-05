@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TrelloCycleTime;
 
 use TrelloCycleTime\Client\TrelloApiClient;
+use TrelloCycleTime\Collection\CardsIdCollection;
 use TrelloCycleTime\Collection\HistoryCards;
 use TrelloCycleTime\Collection\TimeCards;
 
@@ -30,9 +31,18 @@ final class TrelloBoard
 
     public function getTransitions() :array
     {
-        $cards = $this->client->findAllCards($this->boardId);
+        $cards = CardsIdCollection::createFromArray($this->client->findAllCards($this->boardId));
 
-        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards);
+        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
+
+        return $this->calculateTimeCardsCycleTime();
+    }
+
+    public function getCardTransitions(string $cardId) :array
+    {
+        $cards = CardsIdCollection::createFromId($cardId);
+
+        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
 
         return $this->calculateTimeCardsCycleTime();
     }

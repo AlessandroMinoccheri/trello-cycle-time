@@ -5,6 +5,7 @@ namespace Tests\Collection;
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Client\TrelloApiClient;
 use TrelloCycleTime\Collection\HistoryCards;
+use TrelloCycleTime\ValueObject\CardId;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class HistoryCardsTest extends TestCase
@@ -35,9 +36,7 @@ class HistoryCardsTest extends TestCase
         $date2 = '2019-04-29 10:00:00';
 
         $cards = [
-            [
-                'id' => $cardId
-            ]
+            CardId::createFromId($cardId)
         ];
 
         $data = [

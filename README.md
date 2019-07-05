@@ -23,6 +23,11 @@ To use this library you need to have:
 * Trello token
 * Trello boardId to analyze
 
+### All Cards
+
+To get all cards transitions column you can use this code for example
+
+
 ```
 use TrelloCycleTime\Client\TrelloApiClient;
 
@@ -60,6 +65,50 @@ The response of ```getTransitions``` is an array that contains some information 
 ```
 
 In this case you can see that this card takes 1 day to pass from Todo to Doing and 6 days to pass from Doing to Done.
+
+### Specific card transition
+
+To get only a specific card transition you can obtain it using its id like this:
+
+
+```
+use TrelloCycleTime\Client\TrelloApiClient;
+
+$client = new TrelloApiClient('apikey', 'token');
+$board = new TrelloBoard($client, 'board-id');
+
+$transitions = $board->getCardTransitions('cardId');
+
+var_dump($transitions);
+
+```
+
+The response of ```getTransitions``` is an array that contains some information only of that card for example:
+
+```
+[0 => [
+   'id' => 'cardId',
+   'title' => 'cardName',
+   'cycleTimes' => [
+        0 => [
+            'from' => 'Doing',
+            'to' => 'Done',
+            'days' => '6',
+            'name' => 'Doing_DOne'
+        ],
+        1 => [
+             'from' => 'ToDo',
+             'to' => 'Doing',
+             'days' => '1',
+             'name' => 'ToDo_Doing'
+        ]
+   ]
+]
+];
+```
+
+In this case you can see that this card takes 1 day to pass from Todo to Doing and 6 days to pass from Doing to Done.
+
 
 
 ## Contributing
