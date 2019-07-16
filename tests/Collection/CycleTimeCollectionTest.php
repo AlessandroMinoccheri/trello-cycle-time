@@ -18,7 +18,7 @@ class CycleTimeCollectionTest extends TestCase
 
     public function testGetAllCycleTimeColumnsWithEmptyData()
     {
-        $cycleTime = $this->cycleTimeCollection->get([]);
+        $cycleTime = $this->cycleTimeCollection->getFromCardHistory([]);
 
         $this->assertEquals([], $cycleTime);
     }
@@ -42,7 +42,7 @@ class CycleTimeCollectionTest extends TestCase
             $cardHistory2->reveal()
         ];
 
-        $cycleTimes = $this->cycleTimeCollection->get($cardHistories);
+        $cycleTimes = $this->cycleTimeCollection->getFromCardHistory($cardHistories);
 
         $this->assertCount(1, $cycleTimes);
 

@@ -40,7 +40,7 @@ class TimeCards
     private function createTimeCardIfNotExists(HistoryCard $cardHistory) {
         if (!$this->existsCardTime($cardHistory->getId())) {
             $cycleTimeCollection = new CycleTimesCollection();
-            $this->cycleTimeCollection = $cycleTimeCollection->get($this->cardHistoryCollection);
+            $this->cycleTimeCollection = $cycleTimeCollection->getFromCardHistory($this->cardHistoryCollection);
 
             $this->timeCards[] = TimeCard::create(
                 $cardHistory->getId(),

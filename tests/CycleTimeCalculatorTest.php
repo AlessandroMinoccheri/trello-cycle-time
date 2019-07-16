@@ -19,16 +19,16 @@ class CycleTimeCalculatorTest extends TestCase
         $this->cycleTimeCalculator = new CycleTimeCalculator([], $this->historyCards->reveal());
     }
 
-    public function testExecuteWithEmptyData()
+    public function testCalculateFromCardHistoryWithEmptyData()
     {
         $historyCard = $this->prophesize(HistoryCard::class);
         $this->historyCards->getCardHistories()->willReturn([]);
-        $this->cycleTimeCalculator->execute($historyCard->reveal());
+        $this->cycleTimeCalculator->calculateFromCardHistory($historyCard->reveal());
 
         $this->assertEquals([], $this->cycleTimeCalculator->getTimeCards());
     }
 
-    public function testExecute()
+    public function testCalculateFromCardHistory()
     {
         $cardId = 1;
         $fromKey = 'from';
@@ -54,6 +54,6 @@ class CycleTimeCalculatorTest extends TestCase
         ];
 
         $this->cycleTimeCalculator = new CycleTimeCalculator($timeCardsCollection, $this->historyCards->reveal());
-        $this->cycleTimeCalculator->execute();
+        $this->cycleTimeCalculator->calculateFromCardHistory();
     }
 }

@@ -21,7 +21,6 @@ class HistoryCards
             sleep(5);
 
             $creationCard = $client->findCreationCard($cardId->getId());
-
             $creationCards = array_merge($creationCards, $creationCard);
 
             $historyCard = $client->findAllCardHistory($cardId->getId());
@@ -45,6 +44,7 @@ class HistoryCards
             }
 
             $cardHistory = HistoryCard::createFromArray($histories);
+
             $this->cardHistories[] = $cardHistory;
         }
     }

@@ -5,6 +5,7 @@ namespace Tests\Collection;
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Client\TrelloApiClient;
 use TrelloCycleTime\Collection\HistoryCards;
+use TrelloCycleTime\Filter;
 use TrelloCycleTime\ValueObject\CardId;
 use TrelloCycleTime\ValueObject\HistoryCard;
 

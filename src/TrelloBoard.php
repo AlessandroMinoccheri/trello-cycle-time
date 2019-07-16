@@ -21,6 +21,10 @@ final class TrelloBoard
      * @var string
      */
     private $boardId;
+    /**
+     * @var Filter
+     */
+    private $filter;
 
     public function __construct(TrelloApiClient $client, string $boardId)
     {
@@ -29,8 +33,9 @@ final class TrelloBoard
         $this->boardId = $boardId;
     }
 
-    public function getTransitions() :array
+    public function getTransitions(array $filters = []) :array
     {
+        $this->filter = Filter::createFromArray($filters);
         $cards = CardsIdCollection::createFromArray($this->client->findAllCards($this->boardId));
 
         $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
@@ -38,8 +43,9 @@ final class TrelloBoard
         return $this->calculateTimeCardsCycleTime();
     }
 
-    public function getCardTransitions(string $cardId) :array
+    public function getCardTransitions(string $cardId, array $filters = []) :array
     {
+        $this->filter = Filter::createFromArray($filters);
         $cards = CardsIdCollection::createFromId($cardId);
 
         $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
@@ -49,11 +55,15 @@ final class TrelloBoard
 
     private function calculateTimeCardsCycleTime()
     {
-        $timeCards = $this->timeCards->getFromHistoryCards($this->historyCardsCollection);
+        $timeCards = $this->timeCards->getFromHistoryCards($this->historyCardsCollection, $this->filter);
 
         $cycleTimeCalculator = new CycleTimeCalculator($timeCards, $this->historyCardsCollection);
-        $cycleTimeCalculator->execute();
 
+        if ($this->filter->isFromColumnEnabled() && $this->filter->isToColumnEnabled()) {
+            $cycleTimeCalculator->calculateWithStaticFromAndTo($this->filter->getFromColumn(), $this->filter->getToColumn());
+        } else {
+            $cycleTimeCalculator->calculateFromCardHistory();
+        }
 
         return $cycleTimeCalculator->getTimeCards();
     }
