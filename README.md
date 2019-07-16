@@ -110,13 +110,27 @@ The response of ```getTransitions``` is an array that contains some information 
 In this case you can see that this card takes 1 day to pass from Todo to Doing and 6 days to pass from Doing to Done.
 
 
+### Filters
+
+You can filter column cards if you want to know only how much time alla cards or a single card passed from a column to column,
+To do this you can use this code:
+
+```
+$transitions = $board->getTransitions(['fromColumn' => 'todo', 'toColumn' => 'done']);
+```
+
+or for a specific card:
+
+```
+$transitions = $board->getCardTransitions('cardId', ['fromColumn' => 'todo', 'toColumn' => 'done']);
+```
 
 ## Contributing
 
 Every contribution is welcome, remember to add tests and use psalm and phpstan:
 
-````
+```
 ./vendor/bin/phpunit
 ./vendor/bin/psalm
 ./vendor/bin/phpstan analyse
-````
+```

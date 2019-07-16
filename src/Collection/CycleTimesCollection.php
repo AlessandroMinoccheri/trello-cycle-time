@@ -16,7 +16,7 @@ class CycleTimesCollection
         $this->cycleTimeCollection = [];
     }
 
-    public function get(array $cardHistories): array
+    public function getFromCardHistory(array $cardHistories): array
     {
         foreach ($cardHistories as $history) {
             if ($history->getFrom() === null || $history->getFrom() === '') {

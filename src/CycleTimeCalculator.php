@@ -6,6 +6,7 @@ namespace TrelloCycleTime;
 
 
 use TrelloCycleTime\Collection\HistoryCards;
+use TrelloCycleTime\ValueObject\TimeCard;
 
 class CycleTimeCalculator
 {
@@ -24,7 +25,7 @@ class CycleTimeCalculator
         $this->historyCards = $historyCards;
     }
 
-    public function execute()
+    public function calculateFromCardHistory()
     {
         $cardHistoryCollection = $this->historyCards->getCardHistories();
         foreach ($cardHistoryCollection as $cardHistory) {
@@ -32,24 +33,36 @@ class CycleTimeCalculator
                 if ($timeCard->getId() !== $cardHistory->getId() ||
                     $cardHistory->getFrom() === null ||
                     $cardHistory->getTo() === null) {
+
                     continue;
                 }
 
-                $fromDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getFrom());
-                $toDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $cardHistory->getTo());
-
-                if ($fromDate === null || $toDate === null) {
-                    continue;
-                }
-
-                $timeCard->calculateDayDifferenceBetweenColumns(
-                    $cardHistory->getFrom(),
-                    $fromDate,
-                    $cardHistory->getTo(),
-                    $toDate
-                );
+                $this->execute($timeCard, $cardHistory->getFrom(), $cardHistory->getTo());
             }
         }
+    }
+
+    public function calculateWithStaticFromAndTo(?string $from, ?string $to)
+    {
+        if ($from === null || $to === null) {
+            return;
+        }
+
+        foreach ($this->timeCards as $timeCard) {
+            $this->execute($timeCard, $from, $to);
+        }
+    }
+
+    private function execute(TimeCard $timeCard, string $from, string $to)
+    {
+        $fromDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $from);
+        $toDate = $this->historyCards->getByCardIdAndTo($timeCard->getId(), $to);
+
+        if ($fromDate === null || $toDate === null) {
+            return;
+        }
+
+        $timeCard->calculateDayDifferenceBetweenColumns($from, $fromDate, $to, $toDate);
     }
 
     public function getTimeCards(): array
