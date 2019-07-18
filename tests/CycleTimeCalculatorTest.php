@@ -56,4 +56,62 @@ class CycleTimeCalculatorTest extends TestCase
         $this->cycleTimeCalculator = new CycleTimeCalculator($timeCardsCollection, $this->historyCards->reveal());
         $this->cycleTimeCalculator->calculateFromCardHistory();
     }
+
+    public function testCalculateWithStaticFromAndTo()
+    {
+        $cardId = 1;
+        $fromKey = 'from';
+        $toKey = 'to';
+        $fromDate = '2019-05-25 00:00:00';
+        $toDate = '2019-05-26 00:00:00';
+
+        $historyCard = $this->prophesize(HistoryCard::class);
+        $historyCard->getId()->willReturn($cardId);
+        $historyCard->getFrom()->willReturn($fromKey);
+        $historyCard->getTo()->willReturn($toKey);
+
+        $timeCard = $this->prophesize(TimeCard::class);
+        $timeCard->getId()->willReturn($cardId);
+        $timeCard->calculateDayDifferenceBetweenColumns($fromKey, $fromDate, $toKey, $toDate)->shouldBeCalled();
+
+        $this->historyCards->getCardHistories()->willReturn([$historyCard->reveal()]);
+        $this->historyCards->getByCardIdAndTo($cardId, $fromKey)->willReturn($fromDate);
+        $this->historyCards->getByCardIdAndTo($cardId, $toKey)->willReturn($toDate);
+
+        $timeCardsCollection = [
+            $timeCard->reveal()
+        ];
+
+        $this->cycleTimeCalculator = new CycleTimeCalculator($timeCardsCollection, $this->historyCards->reveal());
+        $this->cycleTimeCalculator->calculateWithStaticFromAndTo($fromKey, $toKey);
+    }
+
+    public function testCalculateWithStaticFromAndToNull()
+    {
+        $cardId = 1;
+        $fromKey = null;
+        $toKey = null;
+        $fromDate = '2019-05-25 00:00:00';
+        $toDate = '2019-05-26 00:00:00';
+
+        $historyCard = $this->prophesize(HistoryCard::class);
+        $historyCard->getId()->willReturn($cardId);
+        $historyCard->getFrom()->willReturn($fromKey);
+        $historyCard->getTo()->willReturn($toKey);
+
+        $timeCard = $this->prophesize(TimeCard::class);
+        $timeCard->getId()->willReturn($cardId);
+        $timeCard->calculateDayDifferenceBetweenColumns($fromKey, $fromDate, $toKey, $toDate)->shouldNotBeCalled();
+
+        $this->historyCards->getCardHistories()->willReturn([$historyCard->reveal()]);
+        $this->historyCards->getByCardIdAndTo($cardId, $fromKey)->willReturn($fromDate);
+        $this->historyCards->getByCardIdAndTo($cardId, $toKey)->willReturn($toDate);
+
+        $timeCardsCollection = [
+            $timeCard->reveal()
+        ];
+
+        $this->cycleTimeCalculator = new CycleTimeCalculator($timeCardsCollection, $this->historyCards->reveal());
+        $this->cycleTimeCalculator->calculateWithStaticFromAndTo($fromKey, $toKey);
+    }
 }
