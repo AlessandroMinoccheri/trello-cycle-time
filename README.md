@@ -112,7 +112,13 @@ In this case you can see that this card takes 1 day to pass from Todo to Doing a
 
 ### Filters
 
-You can filter column cards if you want to know only how much time alla cards or a single card passed from a column to column,
+You can filter column cards with some parameters.
+ Here are some possible filters
+ 
+
+#### From column to column 
+if you want to know only how much time alla cards or a single card passed from a column to column,
+ 
 To do this you can use this code:
 
 ```
@@ -123,6 +129,24 @@ or for a specific card:
 
 ```
 $transitions = $board->getCardTransitions('cardId', ['fromColumn' => 'todo', 'toColumn' => 'done']);
+```
+
+#### From date to date 
+if you want to know only how much time alla cards or a single card passed filtered by from a date or to a date or together,
+ 
+To do this you can use this code:
+
+```
+$transitions = $board->getTransitions(['fromDate' => '2019-01-01', 'toDate' => '2019-12-31']);
+$transitions = $board->getTransitions(['fromDate' => '2019-01-01']);
+$transitions = $board->getTransitions(['toDate' => '2019-12-31']);
+
+```
+
+or for a specific card:
+
+```
+$transitions = $board->getCardTransitions(['fromDate' => '2019-01-01', 'toDate' => '2019-12-31']);
 ```
 
 ## Contributing

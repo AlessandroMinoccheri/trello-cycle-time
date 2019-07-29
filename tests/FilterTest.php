@@ -15,6 +15,8 @@ class FilterTest extends TestCase
 
         $this->assertFalse($filter->isFromColumnEnabled());
         $this->assertFalse($filter->isToColumnEnabled());
+        $this->assertFalse($filter->isFromDateEnabled());
+        $this->assertFalse($filter->isToDateEnabled());
     }
 
     public function testWithFromColumnToColumnFilters()
@@ -30,5 +32,20 @@ class FilterTest extends TestCase
 
         $this->assertEquals('fromColumn', $filter->getFromColumn());
         $this->assertEquals('toColumn', $filter->getToColumn());
+    }
+
+    public function testWithFromDateToDateFilters()
+    {
+        $filtersArray = [
+            'fromDate' => 'fromDate',
+            'toDate' => 'toDate'
+        ];
+        $filter = Filter::createFromArray($filtersArray);
+
+        $this->assertTrue($filter->isFromDateEnabled());
+        $this->assertTrue($filter->isToDateEnabled());
+
+        $this->assertEquals('fromDate', $filter->getFromDate());
+        $this->assertEquals('toDate', $filter->getToDate());
     }
 }

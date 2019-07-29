@@ -5,7 +5,6 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use TrelloCycleTime\Client\TrelloApiClient;
-use TrelloCycleTime\Collection\CardsIdCollection;
 use TrelloCycleTime\TrelloBoard;
 
 class TrelloBoardTest extends TestCase

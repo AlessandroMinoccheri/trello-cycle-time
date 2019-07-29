@@ -38,7 +38,7 @@ final class TrelloBoard
         $this->filter = Filter::createFromArray($filters);
         $cards = CardsIdCollection::createFromArray($this->client->findAllCards($this->boardId));
 
-        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
+        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId(), $this->filter);
 
         return $this->calculateTimeCardsCycleTime();
     }
@@ -48,7 +48,7 @@ final class TrelloBoard
         $this->filter = Filter::createFromArray($filters);
         $cards = CardsIdCollection::createFromId($cardId);
 
-        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId());
+        $this->historyCardsCollection = HistoryCards::createFromCards($this->client, $cards->getCardsId(), $this->filter);
 
         return $this->calculateTimeCardsCycleTime();
     }
