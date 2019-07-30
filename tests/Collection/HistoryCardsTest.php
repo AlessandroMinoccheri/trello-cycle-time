@@ -12,15 +12,17 @@ use TrelloCycleTime\ValueObject\HistoryCard;
 class HistoryCardsTest extends TestCase
 {
     private $client;
+    private $filter;
 
     public function setup()
     {
         $this->client = $this->prophesize(TrelloApiClient::class);
+        $this->filter = $this->prophesize(Filter::class);
     }
 
     public function testCreateWithoutResultsReturnEmptyArray()
     {
-        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), []);
+        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), [], $this->filter->reveal());
         $this->assertEquals([], $cardHistoryCollection->getCardHistories());
     }
 
@@ -77,7 +79,9 @@ class HistoryCardsTest extends TestCase
 
         $this->client->findCreationCard($cardId)->willReturn([]);
         $this->client->findAllCardHistory($cardId)->willReturn($data);
-        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), $cards);
+        $this->filter->isFromDateEnabled()->willReturn(false);
+        $this->filter->isToDateEnabled()->willReturn(false);
+        $cardHistoryCollection = HistoryCards::createFromCards($this->client->reveal(), $cards, $this->filter->reveal());
 
         $cardHistory = HistoryCard::createFromArray([
             'id' => $cardId,

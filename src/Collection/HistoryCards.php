@@ -5,17 +5,23 @@ declare(strict_types=1);
 namespace TrelloCycleTime\Collection;
 
 use TrelloCycleTime\Client\TrelloApiClient;
+use TrelloCycleTime\Filter;
 use TrelloCycleTime\ValueObject\HistoryCard;
 
 class HistoryCards
 {
     private $cardHistories;
+    /**
+     * @var Filter
+     */
+    private $filter;
 
-    private function __construct(TrelloApiClient $client, array $cardsId)
+    private function __construct(TrelloApiClient $client, array $cardsId, Filter $filter)
     {
         $this->cardHistories = [];
         $creationCards = [];
         $historyCards = [];
+        $this->filter = $filter;
 
         foreach ($cardsId as $cardId) {
             sleep(5);
@@ -31,9 +37,9 @@ class HistoryCards
         $this->addCreationCards($creationCards);
     }
 
-    public static function createFromCards(TrelloApiClient $client, array $cards)
+    public static function createFromCards(TrelloApiClient $client, array $cards, Filter $filter)
     {
-        return new self($client, $cards);
+        return new self($client, $cards, $filter);
     }
 
     private function createFromArray(array $cardHistoryData)
@@ -43,9 +49,7 @@ class HistoryCards
                 continue;
             }
 
-            $cardHistory = HistoryCard::createFromArray($histories);
-
-            $this->cardHistories[] = $cardHistory;
+            $this->addHistoryCard(HistoryCard::createFromArray($histories));
         }
     }
 
@@ -56,9 +60,47 @@ class HistoryCards
                 continue;
             }
 
-            $cardHistory = HistoryCard::createFromCreationArray($creation);
-            $this->cardHistories[] = $cardHistory;
+            $this->addHistoryCard(HistoryCard::createFromCreationArray($creation));
         }
+    }
+
+    private function addHistoryCard(HistoryCard $historyCard) :void
+    {
+        if (!$this->isInFromDateRange($historyCard) || !$this->isInToDateRange($historyCard)) {
+            return;
+        }
+
+        $this->cardHistories[] = $historyCard;
+    }
+
+    private function isInFromDateRange(HistoryCard $historyCard) :bool
+    {
+        if ($this->filter->isFromDateEnabled()) {
+            if ($this->filter->getFromDate() === null) {
+                return false;
+            }
+
+            if (strtotime($historyCard->getDate()) < strtotime($this->filter->getFromDate() ?? '1970-01-01')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function isInToDateRange(HistoryCard $historyCard) :bool
+    {
+        if ($this->filter->isToDateEnabled()) {
+            if ($this->filter->getToDate() === null) {
+                return false;
+            }
+
+            if (strtotime($historyCard->getDate()) > strtotime($this->filter->getToDate() ?? '1970-01-01')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

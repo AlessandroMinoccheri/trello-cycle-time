@@ -8,11 +8,15 @@ class Filter
 {
     private $fromColumn;
     private $toColumn;
+    private $fromDate;
+    private $toDate;
 
     private function __construct(array $filters)
     {
         $this->fromColumn = $filters['fromColumn'] ?? null;
         $this->toColumn = $filters['toColumn'] ?? null;
+        $this->fromDate= $filters['fromDate'] ?? null;
+        $this->toDate = $filters['toDate'] ?? null;
     }
 
     public static function createFromArray(array $filters) :Filter
@@ -30,6 +34,16 @@ class Filter
         return $this->toColumn !== null;
     }
 
+    public function isFromDateEnabled() :bool
+    {
+        return $this->fromDate !== null;
+    }
+
+    public function isToDateEnabled() :bool
+    {
+        return $this->toDate !== null;
+    }
+
     /**
      * @return string|null
      */
@@ -44,5 +58,21 @@ class Filter
     public function getToColumn(): ?string
     {
         return $this->toColumn;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFromDate(): ?string
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getToDate(): ?string
+    {
+        return $this->toDate;
     }
 }
