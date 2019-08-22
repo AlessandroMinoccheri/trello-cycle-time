@@ -12,6 +12,8 @@ With this tool you can seen how many times a card take to pass from a state to a
 
 ## Installation
 
+You can install this package via composer like this:
+
 ```
 composer require alessandrominoccheri/trello-cycle-time
 ``` 
